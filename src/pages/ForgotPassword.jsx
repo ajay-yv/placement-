@@ -26,11 +26,9 @@ const ForgotPassword = () => {
         setIsLoading(true);
 
         try {
-            const res = await sendResetOTP(email);
-            setStep('OTP');
-            setMessage('We sent a secure 4-digit code to your email.');
-            if (res.previewUrl) setPreviewUrl(res.previewUrl);
-            if (res.demoOtp) setDemoOtp(res.demoOtp);
+            await sendResetOTP(email);
+            setStep('SUCCESS');
+            setMessage('A password reset link has been dispatched to your email.');
         } catch (err) {
             setError(err.message || 'Failed to dispatch security code.');
         } finally {
@@ -86,15 +84,11 @@ const ForgotPassword = () => {
                 </div>
                 <h2 className="text-center text-3xl font-extrabold text-gray-900 tracking-tight">
                     {step === 'EMAIL' && 'Forgot Password?'}
-                    {step === 'OTP' && 'Enter OTP'}
-                    {step === 'PASSWORD' && 'Reset Password'}
-                    {step === 'SUCCESS' && 'Success!'}
+                    {step === 'SUCCESS' && 'Check Your Email'}
                 </h2>
                 <p className="mt-2 text-center text-sm text-gray-500 max-w-xs mx-auto">
                     {step === 'EMAIL' && 'No worries, we\'ll send you reset instructions.'}
-                    {step === 'OTP' && 'We sent a secure 4-digit code to your email.'}
-                    {step === 'PASSWORD' && 'Please enter a new password for your account.'}
-                    {step === 'SUCCESS' && 'Your password has been successfully reset.'}
+                    {step === 'SUCCESS' && 'A secure reset link has been delivered to your actual inbox.'}
                 </p>
             </div>
 
@@ -152,7 +146,7 @@ const ForgotPassword = () => {
                                 disabled={isLoading}
                                 className="w-full flex justify-center items-center py-4 px-4 border border-transparent rounded-2xl shadow-xl shadow-indigo-100 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
                             >
-                                {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Send Reset Code'}
+                                {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Send Reset Link'}
                             </button>
                         </form>
                     )}
@@ -261,9 +255,9 @@ const ForgotPassword = () => {
                              <div className="h-20 w-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
                                 <CheckCircle className="h-10 w-10 text-emerald-500" />
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">Password Secured</h3>
+                            <h3 className="text-xl font-bold text-gray-900 mb-2">Reset Link Dispatched</h3>
                             <p className="text-sm text-gray-500 mb-8 max-w-xs mx-auto">
-                                Your account password has been successfully updated.
+                                Check your email inbox for a link to reset your account password.
                             </p>
                             <button
                                 onClick={() => navigate('/login')}
