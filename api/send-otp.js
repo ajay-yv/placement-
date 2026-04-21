@@ -11,7 +11,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, message: 'Email address is required' });
     }
 
-    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const hash = crypto.createHash('sha256').update(otp + email).digest('hex');
 
     try {
