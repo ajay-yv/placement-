@@ -55,11 +55,13 @@ export default async function handler(req, res) {
         const info = await transporter.sendMail(mailOptions);
         
         let previewUrl = null;
+        let demoOtp = null;
         if (!process.env.SMTP_USER) {
             previewUrl = nodemailer.getTestMessageUrl(info);
+            demoOtp = otp; // Pass to frontend purely for UI simulation without SMTP
         }
 
-        return res.status(200).json({ success: true, hash, previewUrl });
+        return res.status(200).json({ success: true, hash, previewUrl, demoOtp });
     } catch (error) {
         console.error('SMTP sending failed:', error);
         return res.status(500).json({ success: false, message: 'Failed to dispatch email. Check SMTP configuration.' });

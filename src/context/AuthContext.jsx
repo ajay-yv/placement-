@@ -135,7 +135,7 @@ export const AuthProvider = ({ children }) => {
             if (data.previewUrl) {
                 console.log(`%c[TEST EMAIL PREVIEW AVAILABLE]`, "color: #10b981; font-weight: bold;");
                 console.log(data.previewUrl);
-                return { success: true, previewUrl: data.previewUrl, message: 'Security code dispatched to secure sandbox.' };
+                return { success: true, previewUrl: data.previewUrl, demoOtp: data.demoOtp, message: 'Security code dispatched to secure sandbox.' };
             }
 
             return { success: true, message: 'Security code dispatched securely to your email' };

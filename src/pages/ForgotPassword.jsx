@@ -11,6 +11,7 @@ const ForgotPassword = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [previewUrl, setPreviewUrl] = useState(null);
+    const [demoOtp, setDemoOtp] = useState(null);
     
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
@@ -29,6 +30,7 @@ const ForgotPassword = () => {
             setStep('OTP');
             setMessage('We sent a secure 6-digit code to your email.');
             if (res.previewUrl) setPreviewUrl(res.previewUrl);
+            if (res.demoOtp) setDemoOtp(res.demoOtp);
         } catch (err) {
             setError(err.message || 'Failed to dispatch security code.');
         } finally {
@@ -286,6 +288,39 @@ const ForgotPassword = () => {
             <p className="mt-8 text-center text-[10px] text-gray-400 uppercase tracking-widest font-bold">
                 &copy; 2026 Placement Tracker &bull; All Rights Reserved
             </p>
+
+            {/* In-App Automated Email Delivery Simulator */}
+            {demoOtp && step === 'OTP' && (
+                <div className="fixed top-6 right-6 w-80 bg-white shadow-2xl rounded-2xl border border-gray-100 p-5 animate-in slide-in-from-top-12 fade-in duration-700 z-50">
+                    <div className="flex items-center justify-between mb-3 border-b border-gray-50 pb-2">
+                        <div className="flex items-center space-x-2">
+                            <div className="bg-indigo-100 p-1.5 rounded-full">
+                                <Mail className="w-4 h-4 text-indigo-600" />
+                            </div>
+                            <span className="text-xs font-bold text-gray-800">New Email Received</span>
+                        </div>
+                        <span className="text-[10px] text-gray-400 font-medium">Just now</span>
+                    </div>
+                    <div>
+                        <p className="text-[10px] text-gray-500 mb-1 font-semibold">From: security@placementtracker.com</p>
+                        <p className="text-[10px] text-gray-500 mb-3 font-semibold">To: {email}</p>
+                        <h4 className="text-sm font-bold text-gray-900 mb-2">Your Security Access Code</h4>
+                        <p className="text-xs text-gray-600 leading-relaxed mb-4">
+                            You requested a password reset. Your secure access code is:
+                        </p>
+                        <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-center mb-2 shadow-inner">
+                            <span className="text-2xl font-mono font-bold tracking-[0.3em] text-indigo-700">{demoOtp}</span>
+                        </div>
+                    </div>
+                    <button 
+                        onClick={() => setDemoOtp(null)}
+                        className="absolute -top-2 -right-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full w-6 h-6 flex items-center justify-center transition-colors text-xs font-bold shadow-sm focus:outline-none"
+                    >
+                        &times;
+                    </button>
+                    <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-b-2xl"></div>
+                </div>
+            )}
         </div>
     );
 };
