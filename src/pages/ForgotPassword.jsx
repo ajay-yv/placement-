@@ -28,7 +28,7 @@ const ForgotPassword = () => {
         try {
             const res = await sendResetOTP(email);
             setStep('OTP');
-            setMessage('We sent a secure 6-digit code to your email.');
+            setMessage('We sent a secure 4-digit code to your email.');
             if (res.previewUrl) setPreviewUrl(res.previewUrl);
             if (res.demoOtp) setDemoOtp(res.demoOtp);
         } catch (err) {
@@ -92,7 +92,7 @@ const ForgotPassword = () => {
                 </h2>
                 <p className="mt-2 text-center text-sm text-gray-500 max-w-xs mx-auto">
                     {step === 'EMAIL' && 'No worries, we\'ll send you reset instructions.'}
-                    {step === 'OTP' && 'We sent a secure 6-digit code to your email.'}
+                    {step === 'OTP' && 'We sent a secure 4-digit code to your email.'}
                     {step === 'PASSWORD' && 'Please enter a new password for your account.'}
                     {step === 'SUCCESS' && 'Your password has been successfully reset.'}
                 </p>
@@ -160,19 +160,19 @@ const ForgotPassword = () => {
                     {step === 'OTP' && (
                         <form className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500" onSubmit={handleVerifyOTP}>
                             <div>
-                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Enter 6-Digit OTP</label>
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Enter 4-Digit OTP</label>
                                 <div className="relative group">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-indigo-600 transition-colors">
                                         <KeyRound className="h-5 w-5" />
                                     </div>
                                     <input
                                         type="text"
-                                        maxLength="6"
+                                        maxLength="4"
                                         required
                                         value={otp}
                                         onChange={(e) => setOtp(e.target.value)}
                                         className="block w-full pl-10 pr-3 py-3.5 border border-gray-100 rounded-2xl bg-gray-50/50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 focus:bg-white text-sm tracking-[0.5em] font-mono text-center transition-all"
-                                        placeholder="••••••"
+                                        placeholder="••••"
                                     />
                                 </div>
                             </div>
