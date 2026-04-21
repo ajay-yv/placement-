@@ -10,6 +10,7 @@ const ForgotPassword = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [previewUrl, setPreviewUrl] = useState(null);
     
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
@@ -24,9 +25,10 @@ const ForgotPassword = () => {
         setIsLoading(true);
 
         try {
-            await sendResetOTP(email);
+            const res = await sendResetOTP(email);
             setStep('OTP');
             setMessage('We sent a secure 6-digit code to your email.');
+            if (res.previewUrl) setPreviewUrl(res.previewUrl);
         } catch (err) {
             setError(err.message || 'Failed to dispatch security code.');
         } finally {
@@ -111,6 +113,16 @@ const ForgotPassword = () => {
                             <div className="flex items-center">
                                 <ShieldCheck className="h-4 w-4 text-emerald-500 mr-2" />
                                 <p className="text-xs font-bold text-emerald-800 tracking-wide">{message}</p>
+                            </div>
+                        </div>
+                    )}
+                    {previewUrl && step === 'OTP' && (
+                        <div className="mb-6 bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-md animate-in fade-in slide-in-from-top-2">
+                            <div className="flex flex-col">
+                                <p className="text-xs font-bold text-indigo-800 tracking-wide mb-1">Demo Mode Activated</p>
+                                <a href={previewUrl} target="_blank" rel="noreferrer" className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 underline">
+                                    Click here to view the Ethereal Test Email
+                                </a>
                             </div>
                         </div>
                     )}

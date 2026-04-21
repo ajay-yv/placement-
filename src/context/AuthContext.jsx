@@ -125,21 +125,18 @@ export const AuthProvider = ({ children }) => {
             const data = await res.json();
             if (!data.success) throw new Error(data.message || 'Failed to dispatch email');
 
-            if (data.previewUrl) {
-                console.log(`%c[TEST EMAIL PREVIEW AVAILABLE]`, "color: #10b981; font-weight: bold;");
-                console.log(data.previewUrl);
-                alert(`DEMO MODE ACTIVE: No SMTP keys configured in Vercel.\n\nThe real email was caught by Ethereal Secure Mailbox!\nWe will automatically open your inbox in a new tab now.`);
-                window.open(data.previewUrl, "_blank");
-            }
-
-            // Save the hash returned by the server, do not store OTP in plaintext!
+            // Save the hash securely for validation step
             localStorage.setItem(`otp_hash_${email}`, JSON.stringify({
                 hash: data.hash,
                 expires: Date.now() + 600000 // 10 mins
             }));
-
-            // Clear any stale fallbacks
             localStorage.removeItem(`otp_fallback_${email}`);
+
+            if (data.previewUrl) {
+                console.log(`%c[TEST EMAIL PREVIEW AVAILABLE]`, "color: #10b981; font-weight: bold;");
+                console.log(data.previewUrl);
+                return { success: true, previewUrl: data.previewUrl, message: 'Security code dispatched to secure sandbox.' };
+            }
 
             return { success: true, message: 'Security code dispatched securely to your email' };
         } catch (error) {
