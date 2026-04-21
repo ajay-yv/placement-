@@ -13,6 +13,12 @@ export default defineConfig({
     entries: ['index.html'], // Only scan the main index.html
   },
   server: {
+    proxy: {
+      '/api': {
+        target: 'https://placement-sage.vercel.app',
+        changeOrigin: true,
+      }
+    },
     host: true, // innovative feature: allow access from network
     watch: {
       ignored: ['**/android/**', '**/ios/**', '**/dist/**', '**/release/**']

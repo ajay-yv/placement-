@@ -26,7 +26,7 @@ const ForgotPassword = () => {
         try {
             await sendResetOTP(email);
             setStep('OTP');
-            setMessage('A secure 6-digit access code has been dispatched.');
+            setMessage('We sent a secure 6-digit code to your email.');
         } catch (err) {
             setError(err.message || 'Failed to dispatch security code.');
         } finally {
@@ -42,7 +42,7 @@ const ForgotPassword = () => {
         try {
             await verifyResetOTP(email, otp);
             setStep('PASSWORD');
-            setMessage('Identity verified. Please update your credentials.');
+            setMessage('OTP Verified. Please enter your new password.');
         } catch (err) {
             setError(err.message || 'Invalid security code.');
         } finally {

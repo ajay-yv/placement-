@@ -15,13 +15,25 @@ export default async function handler(req, res) {
     const hash = crypto.createHash('sha256').update(otp + email).digest('hex');
 
     try {
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS,
-            },
-        });
+        let transporter;
+        if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+            transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: process.env.SMTP_USER,
+                    pass: process.env.SMTP_PASS,
+                },
+            });
+        } else {
+            console.log("No SMTP credentials found. Creating Ethereal secure test account...");
+            const testAccount = await nodemailer.createTestAccount();
+            transporter = nodemailer.createTransport({
+                host: testAccount.smtp.host,
+                port: testAccount.smtp.port,
+                secure: testAccount.smtp.secure,
+                auth: { user: testAccount.user, pass: testAccount.pass },
+            });
+        }
 
         const mailOptions = {
             from: process.env.SMTP_USER || 'no-reply@placementtracker.com',
@@ -40,8 +52,14 @@ export default async function handler(req, res) {
             `
         };
 
-        await transporter.sendMail(mailOptions);
-        return res.status(200).json({ success: true, hash });
+        const info = await transporter.sendMail(mailOptions);
+        
+        let previewUrl = null;
+        if (!process.env.SMTP_USER) {
+            previewUrl = nodemailer.getTestMessageUrl(info);
+        }
+
+        return res.status(200).json({ success: true, hash, previewUrl });
     } catch (error) {
         console.error('SMTP sending failed:', error);
         return res.status(500).json({ success: false, message: 'Failed to dispatch email. Check SMTP configuration.' });
