@@ -1,0 +1,18 @@
+{
+  "appId": "com.placement.app",
+  "appName": "Placement Tracker",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "GoogleAuth": {
+      "scopes": [
+        "profile",
+        "email"
+      ],
+      "serverClientId": "522398647248-tn2vs3h8p0pnmcpl0ek10m20b7ptsj08.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": true
+    }
+  }
+}

@@ -1,0 +1,79 @@
+
+> Configure project :app
+WARNING: Using flatDir should be avoided because it doesn't support any meta-data formats.
+
+> Configure project :capacitor-cordova-android-plugins
+WARNING: Using flatDir should be avoided because it doesn't support any meta-data formats.
+
+> Task :app:signingReport
+Variant: debug
+Config: debug
+Store: C:\Users\ajayy\.android\debug.keystore
+Alias: AndroidDebugKey
+MD5: 92:6B:C5:8F:98:20:FD:F7:69:5B:A6:DF:02:16:87:EA
+SHA1: 72:27:60:7E:45:5A:26:50:6E:94:ED:BE:B0:2F:E0:E8:7C:28:59:1E
+SHA-256: A1:E8:A2:59:AD:8B:91:38:34:22:02:78:20:CD:A3:09:A6:C0:65:3B:6F:94:39:D0:0C:9B:DF:D6:5A:DE:37:54
+Valid until: Saturday, August 28, 2055
+----------
+Variant: release
+Config: release
+Store: C:\Users\ajayy\OneDrive\Desktop\placement\android\app\placement-release-key.jks
+Alias: placement-key
+MD5: 13:7B:08:78:28:91:64:66:E2:3A:65:30:11:C0:6E:16
+SHA1: 03:F3:CC:76:D8:32:08:80:6C:23:64:9B:4B:5F:8A:F2:F5:DC:E3:A3
+SHA-256: A0:B8:E5:06:49:46:BE:92:67:C5:53:2B:23:46:7C:F3:D8:CA:A7:04:FA:C7:11:2F:7C:F3:E8:F9:EF:16:94:A5
+Valid until: Thursday, July 10, 2053
+----------
+Variant: debugAndroidTest
+Config: debug
+Store: C:\Users\ajayy\.android\debug.keystore
+Alias: AndroidDebugKey
+MD5: 92:6B:C5:8F:98:20:FD:F7:69:5B:A6:DF:02:16:87:EA
+SHA1: 72:27:60:7E:45:5A:26:50:6E:94:ED:BE:B0:2F:E0:E8:7C:28:59:1E
+SHA-256: A1:E8:A2:59:AD:8B:91:38:34:22:02:78:20:CD:A3:09:A6:C0:65:3B:6F:94:39:D0:0C:9B:DF:D6:5A:DE:37:54
+Valid until: Saturday, August 28, 2055
+----------
+
+> Task :capacitor-android:signingReport
+Variant: debugAndroidTest
+Config: debug
+Store: C:\Users\ajayy\.android\debug.keystore
+Alias: AndroidDebugKey
+MD5: 92:6B:C5:8F:98:20:FD:F7:69:5B:A6:DF:02:16:87:EA
+SHA1: 72:27:60:7E:45:5A:26:50:6E:94:ED:BE:B0:2F:E0:E8:7C:28:59:1E
+SHA-256: A1:E8:A2:59:AD:8B:91:38:34:22:02:78:20:CD:A3:09:A6:C0:65:3B:6F:94:39:D0:0C:9B:DF:D6:5A:DE:37:54
+Valid until: Saturday, August 28, 2055
+----------
+
+> Task :capacitor-cordova-android-plugins:signingReport
+Variant: debugAndroidTest
+Config: debug
+Store: C:\Users\ajayy\.android\debug.keystore
+Alias: AndroidDebugKey
+MD5: 92:6B:C5:8F:98:20:FD:F7:69:5B:A6:DF:02:16:87:EA
+SHA1: 72:27:60:7E:45:5A:26:50:6E:94:ED:BE:B0:2F:E0:E8:7C:28:59:1E
+SHA-256: A1:E8:A2:59:AD:8B:91:38:34:22:02:78:20:CD:A3:09:A6:C0:65:3B:6F:94:39:D0:0C:9B:DF:D6:5A:DE:37:54
+Valid until: Saturday, August 28, 2055
+----------
+
+> Task :codetrix-studio-capacitor-google-auth:signingReport
+Variant: debugAndroidTest
+Config: debug
+Store: C:\Users\ajayy\.android\debug.keystore
+Alias: AndroidDebugKey
+MD5: 92:6B:C5:8F:98:20:FD:F7:69:5B:A6:DF:02:16:87:EA
+SHA1: 72:27:60:7E:45:5A:26:50:6E:94:ED:BE:B0:2F:E0:E8:7C:28:59:1E
+SHA-256: A1:E8:A2:59:AD:8B:91:38:34:22:02:78:20:CD:A3:09:A6:C0:65:3B:6F:94:39:D0:0C:9B:DF:D6:5A:DE:37:54
+Valid until: Saturday, August 28, 2055
+----------
+
+[Incubating] Problems report is available at: file:///C:/Users/ajayy/OneDrive/Desktop/placement/android/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 4s
+4 actionable tasks: 4 executed

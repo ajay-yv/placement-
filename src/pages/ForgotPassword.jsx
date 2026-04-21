@@ -1,0 +1,281 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { Mail, ArrowLeft, Loader2, ShieldCheck, AlertCircle, KeyRound, Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
+
+const ForgotPassword = () => {
+    const [step, setStep] = useState('EMAIL'); // EMAIL, OTP, PASSWORD, SUCCESS
+    const [email, setEmail] = useState('');
+    const [otp, setOtp] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    
+    const [error, setError] = useState('');
+    const [message, setMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const { sendResetOTP, verifyResetOTP, updatePasswordSimulated } = useAuth();
+    const navigate = useNavigate();
+
+    const handleSendOTP = async (e) => {
+        e.preventDefault();
+        setError('');
+        setIsLoading(true);
+
+        try {
+            await sendResetOTP(email);
+            setStep('OTP');
+            setMessage('A secure 6-digit access code has been dispatched.');
+        } catch (err) {
+            setError(err.message || 'Failed to dispatch security code.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleVerifyOTP = async (e) => {
+        e.preventDefault();
+        setError('');
+        setIsLoading(true);
+
+        try {
+            await verifyResetOTP(email, otp);
+            setStep('PASSWORD');
+            setMessage('Identity verified. Please update your credentials.');
+        } catch (err) {
+            setError(err.message || 'Invalid security code.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleResetPassword = async (e) => {
+        e.preventDefault();
+        setError('');
+
+        if (password.length < 6) {
+            return setError('Password must be at least 6 characters.');
+        }
+        if (password !== confirmPassword) {
+            return setError('Passwords do not match.');
+        }
+
+        setIsLoading(true);
+        try {
+            await updatePasswordSimulated(email, password);
+            setStep('SUCCESS');
+        } catch (err) {
+            setError(err.message || 'Failed to update password.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 font-sans transition-all duration-500">
+            <div className="sm:mx-auto sm:w-full sm:max-w-md">
+                <div className="flex justify-center mb-6">
+                    <div className="h-16 w-16 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-xl shadow-indigo-200 transform transition-all duration-500 hover:scale-110">
+                        {step === 'SUCCESS' ? <CheckCircle className="h-8 w-8 text-white" /> : <ShieldCheck className="h-8 w-8 text-white" />}
+                    </div>
+                </div>
+                <h2 className="text-center text-3xl font-extrabold text-gray-900 tracking-tight">
+                    {step === 'EMAIL' && 'Account Recovery'}
+                    {step === 'OTP' && 'Security Verification'}
+                    {step === 'PASSWORD' && 'Update Credentials'}
+                    {step === 'SUCCESS' && 'Flow Complete'}
+                </h2>
+                <p className="mt-2 text-center text-sm text-gray-500 max-w-xs mx-auto">
+                    {step === 'EMAIL' && 'Initiate the secure reset protocol using your email.'}
+                    {step === 'OTP' && 'Enter the 6-digit code sent to your institutional email.'}
+                    {step === 'PASSWORD' && 'Define your new secure access credentials.'}
+                    {step === 'SUCCESS' && 'Your institutional account is now secure and ready.'}
+                </p>
+            </div>
+
+            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
+                <div className="bg-white py-10 px-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] rounded-3xl sm:px-10 border border-gray-100 relative overflow-hidden">
+                    
+                    {/* Status Messages */}
+                    {error && (
+                        <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-md animate-in fade-in slide-in-from-top-2">
+                            <div className="flex items-center">
+                                <AlertCircle className="h-4 w-4 text-red-500 mr-2" />
+                                <p className="text-xs font-bold text-red-800 tracking-wide">{error}</p>
+                            </div>
+                        </div>
+                    )}
+                    {message && step !== 'SUCCESS' && (
+                        <div className="mb-6 bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-md animate-in fade-in slide-in-from-top-2">
+                            <div className="flex items-center">
+                                <ShieldCheck className="h-4 w-4 text-emerald-500 mr-2" />
+                                <p className="text-xs font-bold text-emerald-800 tracking-wide">{message}</p>
+                            </div>
+                        </div>
+                    )}
+
+                    {step === 'EMAIL' && (
+                        <form className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500" onSubmit={handleSendOTP}>
+                            <div>
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Institutional Email</label>
+                                <div className="relative group">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-indigo-600 transition-colors">
+                                        <Mail className="h-5 w-5" />
+                                    </div>
+                                    <input
+                                        type="email"
+                                        required
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className="block w-full pl-10 pr-3 py-3.5 border border-gray-100 rounded-2xl bg-gray-50/50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 focus:bg-white text-sm transition-all"
+                                        placeholder="admin@institution.edu"
+                                    />
+                                </div>
+                            </div>
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                className="w-full flex justify-center items-center py-4 px-4 border border-transparent rounded-2xl shadow-xl shadow-indigo-100 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+                            >
+                                {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Dispatch Security Code'}
+                            </button>
+                        </form>
+                    )}
+
+                    {step === 'OTP' && (
+                        <form className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500" onSubmit={handleVerifyOTP}>
+                            <div>
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Secure Protocol Code</label>
+                                <div className="relative group">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-indigo-600 transition-colors">
+                                        <KeyRound className="h-5 w-5" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        maxLength="6"
+                                        required
+                                        value={otp}
+                                        onChange={(e) => setOtp(e.target.value)}
+                                        className="block w-full pl-10 pr-3 py-3.5 border border-gray-100 rounded-2xl bg-gray-50/50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 focus:bg-white text-sm tracking-[0.5em] font-mono text-center transition-all"
+                                        placeholder="••••••"
+                                    />
+                                </div>
+                            </div>
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                className="w-full flex justify-center items-center py-4 px-4 border border-transparent rounded-2xl shadow-xl shadow-indigo-100 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+                            >
+                                {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Verify Access Rights'}
+                            </button>
+                            <button type="button" onClick={() => setStep('EMAIL')} className="w-full text-center text-xs text-gray-400 hover:text-indigo-600 transition-colors font-medium">
+                                Institutional dispatch failed? Retry protocol
+                            </button>
+                        </form>
+                    )}
+
+                    {step === 'PASSWORD' && (
+                        <form className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-500" onSubmit={handleResetPassword}>
+                             <div>
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Email Identifier</label>
+                                <div className="relative group">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                        <Mail className="h-4 w-4" />
+                                    </div>
+                                    <input
+                                        type="email"
+                                        required
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className="block w-full pl-10 pr-3 py-3.5 border border-gray-100 rounded-2xl bg-gray-50 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-600/10 focus:border-indigo-600"
+                                        placeholder="Confirm Email ID"
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">New Secure Password</label>
+                                <div className="relative group">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-indigo-600 transition-colors">
+                                        <Lock className="h-5 w-5" />
+                                    </div>
+                                    <input
+                                        type={showPassword ? 'text' : 'password'}
+                                        required
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        className="block w-full pl-10 pr-10 py-3.5 border border-gray-100 rounded-2xl bg-gray-50/50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 focus:bg-white text-sm transition-all"
+                                        placeholder="••••••••"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-indigo-600 transition-colors"
+                                    >
+                                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Confirm Credentials</label>
+                                <div className="relative group">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-indigo-600 transition-colors">
+                                        <ShieldCheck className="h-5 w-5" />
+                                    </div>
+                                    <input
+                                        type={showPassword ? 'text' : 'password'}
+                                        required
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        className="block w-full pl-10 pr-3 py-3.5 border border-gray-100 rounded-2xl bg-gray-50/50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 focus:bg-white text-sm transition-all"
+                                        placeholder="••••••••"
+                                    />
+                                </div>
+                            </div>
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                className="w-full flex justify-center items-center py-4 px-4 border border-transparent rounded-2xl shadow-xl shadow-indigo-100 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+                            >
+                                {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Update Personal Protocol'}
+                            </button>
+                        </form>
+                    )}
+
+                    {step === 'SUCCESS' && (
+                        <div className="text-center py-6 animate-in zoom-in-95 duration-700">
+                             <div className="h-20 w-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <CheckCircle className="h-10 w-10 text-emerald-500" />
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-900 mb-2">Password Secured</h3>
+                            <p className="text-sm text-gray-500 mb-8 max-w-xs mx-auto">
+                                Your institutional access credentials have been successfully updated.
+                            </p>
+                            <button
+                                onClick={() => navigate('/login')}
+                                className="w-full flex justify-center items-center py-4 px-4 border border-transparent rounded-2xl shadow-xl shadow-emerald-100 text-sm font-bold text-white bg-emerald-500 hover:bg-emerald-600 transition-all hover:scale-[1.02]"
+                            >
+                                Secure Login Account
+                            </button>
+                        </div>
+                    )}
+
+                    {step !== 'SUCCESS' && (
+                        <div className="mt-8 pt-6 border-t border-gray-50 text-center">
+                            <Link to="/login" className="inline-flex items-center text-sm font-semibold text-gray-400 hover:text-indigo-600 transition-colors">
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                Return to Protocol Entry
+                            </Link>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            <p className="mt-8 text-center text-[10px] text-gray-400 uppercase tracking-widest font-bold">
+                &copy; 2026 Institutional Placement Suite &bull; Secure Node 01
+            </p>
+        </div>
+    );
+};
+
+export default ForgotPassword;

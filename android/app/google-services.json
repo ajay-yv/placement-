@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "522398647248",
+    "project_id": "placement-tracker-d5d0d",
+    "storage_bucket": "placement-tracker-d5d0d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522398647248:android:6ec5aa6dc1aba1508aafd5",
+        "android_client_info": {
+          "package_name": "com.placement.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "522398647248-o6ldjrsjqlknd82rn74k1ppnbklbp1cv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.placement.app",
+            "certificate_hash": "03f3cc76d83208806c23649b4b5f8af2f5dce3a3"
+          }
+        },
+        {
+          "client_id": "522398647248-tn2vs3h8p0pnmcpl0ek10m20b7ptsj08.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8ucEbierDwVL93SrHS2wIpmBr8PTiZB8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "522398647248-tn2vs3h8p0pnmcpl0ek10m20b7ptsj08.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

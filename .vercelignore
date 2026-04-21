@@ -1,0 +1,6 @@
+node_modules
+dist
+.env.local.backup
+build_err.txt
+release
+build
