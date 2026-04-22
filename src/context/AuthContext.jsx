@@ -121,7 +121,14 @@ export const AuthProvider = ({ children }) => {
             return await signInWithCredential(auth, credential);
         } catch (err) {
             console.error("Native Google Sign-In Error:", err);
-            const detailedError = err.message || err.code || JSON.stringify(err);
+            // Better diagnostic: stringify entire error object
+            let detailedError = err.message || err.code;
+            try {
+                const fullError = JSON.stringify(err, Object.getOwnPropertyNames(err));
+                detailedError = `${detailedError} | Debug: ${fullError}`;
+            } catch (jsonErr) {
+                // fallback if stringify fails
+            }
             throw new Error(`Google Error: ${detailedError}`);
         }
     };
