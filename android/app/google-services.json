@@ -18,7 +18,15 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.placement.app",
-            "certificate_hash": "03f3cc76d83208806c23649b4b5f8af2f5dce3a3"
+            "certificate_hash": "722760e02fe0e87c2859107e455a26506e94edbe"
+          }
+        },
+        {
+          "client_id": "522398647248-android-sha256.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.placement.app",
+            "certificate_hash": "a1e8a259ad8b91383422027820cda309dfd65ade375439d00c9b28cfbad16c51"
           }
         },
         {

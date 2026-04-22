@@ -15,7 +15,10 @@
     "electron": "electron .",
     "electron:dev": "concurrently \"npm run dev\" \"wait-on tcp:5173 && cross-env ELECTRON_START_URL=http://localhost:5173 electron .\"",
     "electron:build": "vite build && electron .",
-    "dist": "npm run build && electron-builder"
+    "dist": "npm run build && electron-builder",
+    "mobile:sync": "npm run build && npx cap sync",
+    "mobile:open": "npx cap open android",
+    "mobile:build": "npm run build && npx cap sync && npx cap build android"
   },
   "description": "A placement tracking application",
   "author": "Ajay",

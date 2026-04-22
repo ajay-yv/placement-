@@ -163,6 +163,29 @@ const Layout = () => {
                 <main className="flex-1 overflow-y-auto p-4 pb-24 sm:p-6 lg:p-8 lg:pb-8">
                     <Outlet />
                 </main>
+
+                {/* Mobile Bottom Navigation */}
+                <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center h-16 lg:hidden z-30 px-2">
+                    {navItems.slice(0, 5).map((item) => {
+                        const Icon = item.icon;
+                        const isActive = location.pathname === item.path;
+                        return (
+                            <Link
+                                key={item.path}
+                                to={item.path}
+                                className={clsx(
+                                    "flex flex-col items-center justify-center flex-1 py-1",
+                                    isActive ? "text-indigo-600" : "text-gray-500"
+                                )}
+                            >
+                                <Icon size={20} />
+                                <span className="text-[10px] mt-1 font-medium truncate w-full text-center px-1">
+                                    {item.name}
+                                </span>
+                            </Link>
+                        );
+                    })}
+                </nav>
             </div>
         </div>
     );

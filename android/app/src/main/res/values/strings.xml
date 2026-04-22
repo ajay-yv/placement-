@@ -5,4 +5,5 @@
     <string name="package_name">com.placement.app</string>
     <string name="custom_url_scheme">com.placement.app</string>
     <string name="server_client_id">522398647248-tn2vs3h8p0pnmcpl0ek10m20b7ptsj08.apps.googleusercontent.com</string>
+    <string name="google_signin_client_id">522398647248-tn2vs3h8p0pnmcpl0ek10m20b7ptsj08.apps.googleusercontent.com</string>
 </resources>

@@ -11,6 +11,14 @@ import {
 } from 'firebase/auth';
 import { auth, googleProvider } from '../config/firebase';
 
+// Import Capacitor Google Auth at top level to ensure it's bundled correctly
+let GoogleAuth;
+if (typeof window !== 'undefined' && window.Capacitor && window.Capacitor.isNativePlatform()) {
+    import('@codetrix-studio/capacitor-google-auth').then(m => {
+        GoogleAuth = m.GoogleAuth;
+    }).catch(err => console.error("Failed to load GoogleAuth plugin", err));
+}
+
 const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -94,13 +102,28 @@ export const AuthProvider = ({ children }) => {
     };
 
     const nativeGoogleSignIn = async () => {
-        const { GoogleAuth } = await import('@codetrix-studio/capacitor-google-auth');
-        await GoogleAuth.initialize();
-        const googleUser = await GoogleAuth.signIn();
-        const credential = GoogleAuthProvider.credential(
-            googleUser.authentication.idToken
-        );
-        return signInWithCredential(auth, credential);
+        try {
+            if (!GoogleAuth) {
+                // Fallback attempt to import if top-level failed
+                const m = await import('@codetrix-studio/capacitor-google-auth');
+                GoogleAuth = m.GoogleAuth;
+            }
+            
+            await GoogleAuth.initialize({
+                clientId: '522398647248-tn2vs3h8p0pnmcpl0ek10m20b7ptsj08.apps.googleusercontent.com',
+                scopes: ['profile', 'email'],
+                grantOfflineAccess: true,
+            });
+            const googleUser = await GoogleAuth.signIn();
+            const credential = GoogleAuthProvider.credential(
+                googleUser.authentication.idToken
+            );
+            return await signInWithCredential(auth, credential);
+        } catch (err) {
+            console.error("Native Google Sign-In Error:", err);
+            const detailedError = err.message || err.code || JSON.stringify(err);
+            throw new Error(`Google Error: ${detailedError}`);
+        }
     };
 
     const logout = () => {
