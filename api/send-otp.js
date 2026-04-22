@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import crypto from 'crypto';
+import { initAdmin } from './_lib/firebase-admin.js';
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -12,13 +12,61 @@ export default async function handler(req, res) {
     }
 
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
-    const hash = crypto.createHash('sha256').update(otp + email).digest('hex');
+    const expiresAt = Date.now() + 600000; // 10 minutes from now
 
     try {
+        const db = initAdmin();
+        const emailKey = email.toLowerCase();
+        const now = Date.now();
+        let isStatelessFallback = false;
+
+        if (db) {
+            // --- ADAPTIVE AUTHENTICATION: Rate Limiting & Anomaly Detection ---
+            const recentRequests = await db.collection('password_resets')
+                .where('email', '==', emailKey)
+                .where('createdAt', '>', now - 900000) // Last 15 minutes
+                .get();
+
+            if (recentRequests.size >= 3) {
+                await db.collection('security_logs').add({
+                    event: 'RATE_LIMIT_EXCEEDED',
+                    email: emailKey,
+                    ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+                    userAgent: req.headers['user-agent'],
+                    timestamp: now,
+                    severity: 'MEDIUM'
+                });
+                return res.status(429).json({ 
+                    success: false, 
+                    message: 'Too many security requests. Please wait 15 minutes before trying again.' 
+                });
+            }
+
+            await db.collection('security_logs').add({
+                event: 'OTP_REQUESTED',
+                email: emailKey,
+                ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+                userAgent: req.headers['user-agent'],
+                timestamp: now,
+                severity: 'LOW'
+            });
+
+            await db.collection('password_resets').doc(emailKey).set({
+                email: emailKey,
+                otp: otp,
+                expiresAt: expiresAt,
+                createdAt: now
+            });
+        } else {
+            console.warn("Firestore not available. Using stateless fallback for local testing.");
+            isStatelessFallback = true;
+        }
+
         let transporter;
         if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+            console.log(`Initializing real SMTP service: ${process.env.SMTP_SERVICE || 'gmail'}`);
             transporter = nodemailer.createTransport({
-                service: 'gmail',
+                service: process.env.SMTP_SERVICE || 'gmail',
                 auth: {
                     user: process.env.SMTP_USER,
                     pass: process.env.SMTP_PASS,
@@ -58,12 +106,12 @@ export default async function handler(req, res) {
         let demoOtp = null;
         if (!process.env.SMTP_USER) {
             previewUrl = nodemailer.getTestMessageUrl(info);
-            demoOtp = otp; // Pass to frontend purely for UI simulation without SMTP
+            demoOtp = otp; 
         }
 
-        return res.status(200).json({ success: true, hash, previewUrl, demoOtp });
+        return res.status(200).json({ success: true, previewUrl, demoOtp });
     } catch (error) {
-        console.error('SMTP sending failed:', error);
-        return res.status(500).json({ success: false, message: 'Failed to dispatch email. Check SMTP configuration.' });
+        console.error('OTP processing failed:', error);
+        return res.status(500).json({ success: false, message: 'Failed to process security code. Please try again later.' });
     }
 }

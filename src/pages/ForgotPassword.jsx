@@ -27,10 +27,16 @@ const ForgotPassword = () => {
 
         try {
             const res = await sendResetOTP(email);
-            setStep('OTP');
-            setMessage('We sent a secure 4-digit code to your email.');
-            if (res.previewUrl) setPreviewUrl(res.previewUrl);
-            if (res.demoOtp) setDemoOtp(res.demoOtp);
+            
+            if (res.isFirebaseNative) {
+                setStep('SUCCESS');
+                setMessage('A secure reset link has been sent to your email. Please click the link in your phone inbox to reset your password.');
+            } else {
+                setStep('OTP');
+                setMessage('We sent a secure 4-digit code to your email.');
+                if (res.previewUrl) setPreviewUrl(res.previewUrl);
+                if (res.demoOtp) setDemoOtp(res.demoOtp);
+            }
         } catch (err) {
             setError(err.message || 'Failed to dispatch security code.');
         } finally {
@@ -289,36 +295,46 @@ const ForgotPassword = () => {
                 &copy; 2026 Placement Tracker &bull; All Rights Reserved
             </p>
 
-            {/* In-App Automated Email Delivery Simulator */}
+            {/* Enhanced In-App Automated Email Delivery Simulator */}
             {demoOtp && step === 'OTP' && (
-                <div className="fixed top-6 right-6 w-80 bg-white shadow-2xl rounded-2xl border border-gray-100 p-5 animate-in slide-in-from-top-12 fade-in duration-700 z-50">
-                    <div className="flex items-center justify-between mb-3 border-b border-gray-50 pb-2">
-                        <div className="flex items-center space-x-2">
-                            <div className="bg-indigo-100 p-1.5 rounded-full">
-                                <Mail className="w-4 h-4 text-indigo-600" />
+                <div className="fixed top-8 right-8 w-96 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.2)] rounded-3xl border-2 border-indigo-100 p-6 animate-in slide-in-from-right-20 fade-in duration-1000 z-[100] ring-4 ring-indigo-50">
+                    <div className="flex items-center justify-between mb-4 border-b border-gray-100 pb-3">
+                        <div className="flex items-center space-x-3">
+                            <div className="bg-indigo-600 p-2 rounded-xl shadow-lg shadow-indigo-100">
+                                <Mail className="w-5 h-5 text-white" />
                             </div>
-                            <span className="text-xs font-bold text-gray-800">New Email Received</span>
+                            <div>
+                                <span className="block text-sm font-bold text-gray-900 leading-none">Security Dispatch</span>
+                                <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider">Delivered Successfully</span>
+                            </div>
                         </div>
-                        <span className="text-[10px] text-gray-400 font-medium">Just now</span>
+                        <span className="text-[10px] text-gray-400 font-bold bg-gray-50 px-2 py-1 rounded-md">MOCK_SMTP_V2</span>
                     </div>
                     <div>
-                        <p className="text-[10px] text-gray-500 mb-1 font-semibold">From: security@placementtracker.com</p>
-                        <p className="text-[10px] text-gray-500 mb-3 font-semibold">To: {email}</p>
-                        <h4 className="text-sm font-bold text-gray-900 mb-2">Your Security Access Code</h4>
-                        <p className="text-xs text-gray-600 leading-relaxed mb-4">
-                            You requested a password reset. Your secure access code is:
+                        <div className="flex flex-col space-y-1 mb-4">
+                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter flex justify-between">
+                                <span>From: security@placement.io</span>
+                                <span>Priority: High</span>
+                            </p>
+                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">To: {email}</p>
+                        </div>
+                        <h4 className="text-base font-black text-gray-900 mb-3 leading-tight">Verification Protocol Initiated</h4>
+                        <p className="text-xs text-gray-500 leading-relaxed mb-6 font-medium">
+                            Your secure access code is generated below. In production, this arrives in your real inbox.
                         </p>
-                        <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-center mb-2 shadow-inner">
-                            <span className="text-2xl font-mono font-bold tracking-[0.3em] text-indigo-700">{demoOtp}</span>
+                        <div className="bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-6 text-center mb-4 shadow-inner relative group overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <span className="text-4xl font-mono font-black tracking-[0.4em] text-indigo-700 drop-shadow-sm select-all">{demoOtp}</span>
+                            <p className="text-[9px] text-indigo-400 mt-2 font-bold uppercase tracking-widest">Single-Use Secure Token</p>
                         </div>
                     </div>
                     <button 
                         onClick={() => setDemoOtp(null)}
-                        className="absolute -top-2 -right-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full w-6 h-6 flex items-center justify-center transition-colors text-xs font-bold shadow-sm focus:outline-none"
+                        className="w-full py-2.5 bg-gray-900 text-white text-[10px] font-bold rounded-xl hover:bg-gray-800 transition-all uppercase tracking-widest mt-2"
                     >
-                        &times;
+                        Dismiss Secure Notification
                     </button>
-                    <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-b-2xl"></div>
+                    <div className="absolute inset-x-0 bottom-0 h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 rounded-b-3xl animate-pulse"></div>
                 </div>
             )}
         </div>
