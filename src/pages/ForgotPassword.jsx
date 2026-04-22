@@ -28,7 +28,7 @@ const ForgotPassword = () => {
         try {
             const res = await sendResetOTP(email);
             setStep('OTP');
-            setMessage('A secure 6-digit access code has been dispatched.');
+            setMessage('We sent a secure 4-digit code to your email.');
             if (res.previewUrl) setPreviewUrl(res.previewUrl);
             if (res.demoOtp) setDemoOtp(res.demoOtp);
         } catch (err) {
@@ -46,7 +46,7 @@ const ForgotPassword = () => {
         try {
             await verifyResetOTP(email, otp);
             setStep('PASSWORD');
-            setMessage('Identity verified. Please update your credentials.');
+            setMessage('OTP Verified. Please enter your new password.');
         } catch (err) {
             setError(err.message || 'Invalid security code.');
         } finally {
@@ -85,16 +85,16 @@ const ForgotPassword = () => {
                     </div>
                 </div>
                 <h2 className="text-center text-3xl font-extrabold text-gray-900 tracking-tight">
-                    {step === 'EMAIL' && 'Account Recovery'}
-                    {step === 'OTP' && 'Security Verification'}
-                    {step === 'PASSWORD' && 'Update Credentials'}
-                    {step === 'SUCCESS' && 'Flow Complete'}
+                    {step === 'EMAIL' && 'Forgot Password?'}
+                    {step === 'OTP' && 'Enter OTP'}
+                    {step === 'PASSWORD' && 'Reset Password'}
+                    {step === 'SUCCESS' && 'Success!'}
                 </h2>
                 <p className="mt-2 text-center text-sm text-gray-500 max-w-xs mx-auto">
-                    {step === 'EMAIL' && 'Initiate the secure reset protocol using your email.'}
-                    {step === 'OTP' && 'Enter the 6-digit code sent to your institutional email.'}
-                    {step === 'PASSWORD' && 'Define your new secure access credentials.'}
-                    {step === 'SUCCESS' && 'Your institutional account is now secure and ready.'}
+                    {step === 'EMAIL' && 'No worries, we\'ll send you reset instructions.'}
+                    {step === 'OTP' && 'We sent a secure 4-digit code to your email.'}
+                    {step === 'PASSWORD' && 'Please enter a new password for your account.'}
+                    {step === 'SUCCESS' && 'Your password has been successfully reset.'}
                 </p>
             </div>
 
@@ -132,7 +132,7 @@ const ForgotPassword = () => {
                     {step === 'EMAIL' && (
                         <form className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500" onSubmit={handleSendOTP}>
                             <div>
-                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Institutional Email</label>
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Email Address</label>
                                 <div className="relative group">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-indigo-600 transition-colors">
                                         <Mail className="h-5 w-5" />
@@ -143,7 +143,7 @@ const ForgotPassword = () => {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         className="block w-full pl-10 pr-3 py-3.5 border border-gray-100 rounded-2xl bg-gray-50/50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 focus:bg-white text-sm transition-all"
-                                        placeholder="admin@institution.edu"
+                                        placeholder="Enter your email"
                                     />
                                 </div>
                             </div>
@@ -152,7 +152,7 @@ const ForgotPassword = () => {
                                 disabled={isLoading}
                                 className="w-full flex justify-center items-center py-4 px-4 border border-transparent rounded-2xl shadow-xl shadow-indigo-100 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
                             >
-                                {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Dispatch Security Code'}
+                                {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Send Reset Code'}
                             </button>
                         </form>
                     )}
@@ -160,19 +160,19 @@ const ForgotPassword = () => {
                     {step === 'OTP' && (
                         <form className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500" onSubmit={handleVerifyOTP}>
                             <div>
-                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Secure Protocol Code</label>
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Enter 4-Digit OTP</label>
                                 <div className="relative group">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-indigo-600 transition-colors">
                                         <KeyRound className="h-5 w-5" />
                                     </div>
                                     <input
                                         type="text"
-                                        maxLength="6"
+                                        maxLength="4"
                                         required
                                         value={otp}
                                         onChange={(e) => setOtp(e.target.value)}
                                         className="block w-full pl-10 pr-3 py-3.5 border border-gray-100 rounded-2xl bg-gray-50/50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 focus:bg-white text-sm tracking-[0.5em] font-mono text-center transition-all"
-                                        placeholder="••••••"
+                                        placeholder="••••"
                                     />
                                 </div>
                             </div>
@@ -181,10 +181,10 @@ const ForgotPassword = () => {
                                 disabled={isLoading}
                                 className="w-full flex justify-center items-center py-4 px-4 border border-transparent rounded-2xl shadow-xl shadow-indigo-100 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
                             >
-                                {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Verify Access Rights'}
+                                {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Verify Code'}
                             </button>
                             <button type="button" onClick={() => setStep('EMAIL')} className="w-full text-center text-xs text-gray-400 hover:text-indigo-600 transition-colors font-medium">
-                                Institutional dispatch failed? Retry protocol
+                                Didn't receive the OTP? Click to resend
                             </button>
                         </form>
                     )}
@@ -192,7 +192,7 @@ const ForgotPassword = () => {
                     {step === 'PASSWORD' && (
                         <form className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-500" onSubmit={handleResetPassword}>
                              <div>
-                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Email Identifier</label>
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Email Address</label>
                                 <div className="relative group">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                                         <Mail className="h-4 w-4" />
@@ -203,12 +203,12 @@ const ForgotPassword = () => {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         className="block w-full pl-10 pr-3 py-3.5 border border-gray-100 rounded-2xl bg-gray-50 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-600/10 focus:border-indigo-600"
-                                        placeholder="Confirm Email ID"
+                                        placeholder="Confirm email address"
                                     />
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">New Secure Password</label>
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">New Password</label>
                                 <div className="relative group">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-indigo-600 transition-colors">
                                         <Lock className="h-5 w-5" />
@@ -231,7 +231,7 @@ const ForgotPassword = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Confirm Credentials</label>
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Confirm Password</label>
                                 <div className="relative group">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-indigo-600 transition-colors">
                                         <ShieldCheck className="h-5 w-5" />
@@ -251,7 +251,7 @@ const ForgotPassword = () => {
                                 disabled={isLoading}
                                 className="w-full flex justify-center items-center py-4 px-4 border border-transparent rounded-2xl shadow-xl shadow-indigo-100 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
                             >
-                                {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Update Personal Protocol'}
+                                {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Update Password'}
                             </button>
                         </form>
                     )}
@@ -263,13 +263,13 @@ const ForgotPassword = () => {
                             </div>
                             <h3 className="text-xl font-bold text-gray-900 mb-2">Password Secured</h3>
                             <p className="text-sm text-gray-500 mb-8 max-w-xs mx-auto">
-                                Your institutional access credentials have been successfully updated.
+                                Your account password has been successfully updated.
                             </p>
                             <button
                                 onClick={() => navigate('/login')}
                                 className="w-full flex justify-center items-center py-4 px-4 border border-transparent rounded-2xl shadow-xl shadow-emerald-100 text-sm font-bold text-white bg-emerald-500 hover:bg-emerald-600 transition-all hover:scale-[1.02]"
                             >
-                                Secure Login Account
+                                Back to Login
                             </button>
                         </div>
                     )}
@@ -278,7 +278,7 @@ const ForgotPassword = () => {
                         <div className="mt-8 pt-6 border-t border-gray-50 text-center">
                             <Link to="/login" className="inline-flex items-center text-sm font-semibold text-gray-400 hover:text-indigo-600 transition-colors">
                                 <ArrowLeft className="mr-2 h-4 w-4" />
-                                Return to Protocol Entry
+                                Back to Login
                             </Link>
                         </div>
                     )}
@@ -286,7 +286,7 @@ const ForgotPassword = () => {
             </div>
 
             <p className="mt-8 text-center text-[10px] text-gray-400 uppercase tracking-widest font-bold">
-                &copy; 2026 Institutional Placement Suite &bull; Secure Node 01
+                &copy; 2026 Placement Tracker &bull; All Rights Reserved
             </p>
 
             {/* In-App Automated Email Delivery Simulator */}

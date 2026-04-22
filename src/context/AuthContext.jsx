@@ -135,19 +135,19 @@ export const AuthProvider = ({ children }) => {
             if (data.previewUrl) {
                 console.log(`%c[TEST EMAIL PREVIEW AVAILABLE]`, "color: #10b981; font-weight: bold;");
                 console.log(data.previewUrl);
-                return { success: true, previewUrl: data.previewUrl, demoOtp: data.demoOtp, message: 'Institutional code safely intercepted in sandbox.' };
+                return { success: true, previewUrl: data.previewUrl, demoOtp: data.demoOtp, message: 'Security code dispatched to secure sandbox.' };
             }
 
-            return { success: true, message: 'Institutional code dispatched securely to your email' };
+            return { success: true, message: 'Security code dispatched securely to your email' };
         } catch (error) {
             console.warn("Real email service unreachable (e.g., local dev without vercel-cli). Safely falling back to local simulation.", error);
             
             // Fallback for purely local dev testing - domains are unrestricted!
-            const mockOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            const mockOTP = Math.floor(1000 + Math.random() * 9000).toString();
             localStorage.setItem(`otp_fallback_${email}`, JSON.stringify({ code: mockOTP, expires: Date.now() + 600000 }));
             console.log(`%c[FALLBACK SIMULATION] OTP FOR ${email}: ${mockOTP}`, "color: #f59e0b; font-weight: bold; background: #fffbeb; padding: 4px; border-radius: 4px;");
             
-            return { success: true, message: '(Fallback Simulation) Security code generated successfully' };
+            return { success: true, message: '(Fallback) Security code generated successfully' };
         }
     };
 
@@ -157,10 +157,10 @@ export const AuthProvider = ({ children }) => {
         
         // Handle Fallback Dev Mode
         if (fallbackData) {
-            if (Date.now() > fallbackData.expires && otp !== '123456') {
+            if (Date.now() > fallbackData.expires && otp !== '1234') {
                 throw new Error('Simulation code has expired.');
             }
-            if (otp === fallbackData.code || otp === '123456') {
+            if (otp === fallbackData.code || otp === '1234') {
                 return { success: true };
             }
             throw new Error('Invalid code entered.');
@@ -171,7 +171,7 @@ export const AuthProvider = ({ children }) => {
             throw new Error('No active OTP session found. Please dispatch a new code.');
         }
 
-        if (Date.now() > hashData.expires && otp !== '123456') {
+        if (Date.now() > hashData.expires && otp !== '1234') {
             throw new Error('Security access code has expired.');
         }
 
