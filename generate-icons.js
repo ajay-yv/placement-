@@ -27,12 +27,10 @@ async function generateIcons() {
             .toFile(outputFilePublic);
         console.log(`Generated ${outputFilePublic} (512x512)`);
 
-        // Hack: Rename png to ico for older windows compatibility if needed
-        // But electron-builder prefers 256x256+
-        // We will config package.json to point to icon.png if allowed or rely on it auto-converting
-        // For now, let's create a copy as .ico just in case it checks extension, but format is PNG (might serve as fallback)
-        // Actually, electron-builder warns if .ico is not real ico.
-        // Better to point to .png in package.json and let it handle conversion if possible.
+        // Generate PWA Icons
+        await sharp(inputFile).resize(192, 192).png().toFile('public/pwa-192x192.png');
+        await sharp(inputFile).resize(512, 512).png().toFile('public/pwa-512x512.png');
+        console.log(`Generated PWA icons (192x192 and 512x512)`);
 
     } catch (err) {
         console.error('Error generating icons:', err);
